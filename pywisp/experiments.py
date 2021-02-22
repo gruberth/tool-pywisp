@@ -388,7 +388,12 @@ class ExperimentInteractor(QObject):
 
                 for module in getRegisteredExperimentModules():
                     if module[1] == moduleName:
-                        startParams = module[0].getStartParams(module[0])
+                        settings = self.getSettings(parent)
+                        vals = []
+                        for key, val in settings.items():
+                            if val is not None:
+                                vals.append(val)
+                        startParams = module[0].getStartParams(module[0], vals)
                         if startParams is not None:
                             if isinstance(startParams, list):
                                 for _startParams in startParams:
@@ -398,11 +403,6 @@ class ExperimentInteractor(QObject):
                                 startParams['connection'] = module[0].connection
                                 data.append(startParams)
 
-                        settings = self.getSettings(parent)
-                        vals = []
-                        for key, val in settings.items():
-                            if val is not None:
-                                vals.append(val)
                         params = module[0].getParams(module[0], vals)
                         if params and not None:
                             if isinstance(params, list):
